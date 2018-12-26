@@ -17,7 +17,7 @@ How to investigate whether a candidate solution model is adequate for the proble
 
 ### Install
 
-This project requires **Python 2.7** and the following Python libraries installed:
+This project requires **Python 3** and the following Python libraries installed:
 
 - [NumPy](http://www.numpy.org/)
 - [Pandas](http://pandas.pydata.org)
