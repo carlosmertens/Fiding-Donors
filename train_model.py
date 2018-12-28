@@ -139,3 +139,42 @@ def subset_data(features_final, income):
 
 # Call function to shuffle, split the data
 X_train, X_test, y_train, y_test = subset_data(features_final, income)
+
+
+def metric_evaluation(income):
+    """Evaluate model performance using Metrics with Naive Predictor.
+
+    Function to perform Metrics evaluation: Accuracy, Recall, Precision and F-score.
+    Naive Predictor is applied to perform the tests where every individaul would be 
+    assumed to make more than $50000. When there is no benchmark model set, getting a 
+    result better than random choice is a place you could start from.
+    ---------
+    Parameter:
+        income (df): Dataframe holding the target values 
+    Returns:
+        accuracy (float):
+        fscore (float):
+    """
+
+    # Calculate True Positive, add all 0s and 1s from the income. Then False Positive,
+    # substract True Positive from the income. Set True Negative and False Negative to zero.
+    true_positive = np.sum(income)
+    false_positive = income.count() - true_positive
+    # true_negative = 0 
+    false_negative = 0
+
+    # Calculate accuracy, precision, recall and F-score from scratch using formulas
+    accuracy = float(true_positive) / (true_positive + false_positive)
+    recall = float(true_positive) / (true_positive + false_negative)
+    precision = float(true_positive) / (true_positive + false_positive)
+    fscore = (1 + (0.5)**2) * ((precision*recall) / ((0.5)**2 * precision + recall))
+
+    # Print the results for accuracy and F-score
+    print("\n*** Perform Metric Evaluation with Naive Prediction ***")
+    print("Naive Predictor: [Accuracy score: {:.4f}, F-score: {:.4f}]".format(accuracy, fscore))
+
+    return accuracy, fscore
+
+
+# Call function to preform metric evaluation with naive predictor
+accuracy, fscore = metric_evaluation(income)
