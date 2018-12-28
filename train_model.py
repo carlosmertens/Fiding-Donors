@@ -16,6 +16,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 
 def get_data(path):
@@ -67,8 +68,8 @@ def prepare_data(data):
     Parameter:
         data (dataframe): Full dataframe
     Returns:
-        features (dataframe): 
-        targets (dataframe): Target labels
+        features (dataframe): Full dataframe normalized and one-hot encoded
+        targets (dataframe): Target labels numerical encoded
     """
 
     # Split the data into features and target labels
@@ -103,4 +104,38 @@ def prepare_data(data):
     return features_final, income
 
 
+# Call function to preprocess the data
 features_final, income = prepare_data(data)
+
+
+def subset_data(features_final, income):
+    """Shuffle and split data for traininig and testing.
+    
+    Function to shuffle the normalized data into sub-sets. Training sub-set 
+    take 80% of the shuffled data and training sub-set take 20%. Display the
+    number of datapoints for training and testing. 
+    ----------
+    Parameter:
+        features (dataframe): Full preprocessed data feaures
+        target (dataframe): Full numerical values representing the targets
+    Return:
+        X_train (df): Shuffled sub-set containing 80% of the features datapoints
+        X_test (df): Shuffled sub-set containing 80% of the features datapoints
+        y_train (df): Shuffled sub-set containing 20% of the target datapoints
+        y_test (df): Shuffled sub-set containing 20% of the target datapoints
+    """
+    
+    # Shuffle and split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(features_final, income, 
+                                                        test_size = 0.2, random_state = 0)
+
+    # Show the results of the split
+    print("\n*** Shuflle and Split the data ***\nTwo sub-sets:")
+    print("Training set has {} samples or 80% of the data.".format(X_train.shape[0]))
+    print("Testing set has {} samples or 20% of the data.".format(X_test.shape[0]))
+
+    return X_train, X_test, y_train, y_test
+
+
+# Call function to shuffle, split the data
+X_train, X_test, y_train, y_test = subset_data(features_final, income)
