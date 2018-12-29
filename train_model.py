@@ -1,16 +1,19 @@
-# PROGRAMMER: Carlos Mertens
-# DATE CREATED: (DD/MM/YY) - 26/12/18
-# REVISED DATE: (DD/MM/YY) - Not revise it yet
-# PURPOSE: To employ several supervised algorithms to accurately model individuals' income 
-#           using data collected from the 1994 U.S. Census. Choose the best candidate 
-#           algorithm from preliminary results and optimize this algorithm to best model the 
-#           data. Goal with this implementation is to construct a model that accurately predicts 
-#           whether an individual makes more than $50,000.
-#
-# USAGE: This script requires Numpy, Pandas and Scikit_Learn to be installed within the Python environment. 
-# 
-#   Example call:
-#    python train_model.py
+""" PROJECT: FINDING DONORs
+
+PROGRAMMER: Carlos Mertens
+DATE CREATED: (DD/MM/YY) - 26/12/18
+REVISED DATE: (DD/MM/YY) - Not revise it yet
+PURPOSE: To employ several supervised algorithms to accurately model 
+    individuals' income using data collected from the 1994 U.S. Census. Choose
+    the best candidate algorithm from preliminary results and optimize this 
+    algorithm to best model the data. Goal with this implementation is to
+    construct a model that accurately predicts whether an individual makes more
+    than $50,000.
+USAGE: This script requires Numpy, Pandas and Scikit_Learn to be installed within
+    the Python environment.
+Example call:
+    python train_model.py
+"""
 
 # Imports
 import numpy as np
@@ -109,14 +112,14 @@ features_final, income = prepare_data(data)
 
 
 def subset_data(features_final, income):
-    """Shuffle and split data for traininig and testing.
+    """Shuffle and split data for training and testing.
     
     Function to shuffle the normalized data into sub-sets. Training sub-set 
     take 80% of the shuffled data and training sub-set take 20%. Display the
     number of datapoints for training and testing. 
     ----------
     Parameter:
-        features (dataframe): Full preprocessed data feaures
+        features (dataframe): Full preprocessed data features
         target (dataframe): Full numerical values representing the targets
     Return:
         X_train (df): Shuffled sub-set containing 80% of the features datapoints
@@ -130,7 +133,7 @@ def subset_data(features_final, income):
                                                         test_size = 0.2, random_state = 0)
 
     # Show the results of the split
-    print("\n*** Shuflle and Split the data ***\nTwo sub-sets:")
+    print("\n*** Shuffle and Split the data ***\nTwo sub-sets:")
     print("Training set has {} samples or 80% of the data.".format(X_train.shape[0]))
     print("Testing set has {} samples or 20% of the data.".format(X_test.shape[0]))
 
@@ -145,7 +148,7 @@ def metric_evaluation(income):
     """Evaluate model performance using Metrics with Naive Predictor.
 
     Function to perform Metrics evaluation: Accuracy, Recall, Precision and F-score.
-    Naive Predictor is applied to perform the tests where every individaul would be 
+    Naive Predictor is applied to perform the tests where every individual would be 
     assumed to make more than $50000. When there is no benchmark model set, getting a 
     result better than random choice is a place you could start from.
     ---------
