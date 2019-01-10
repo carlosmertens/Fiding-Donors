@@ -2,5 +2,6 @@
 	"cSpell.words": [
 		"fscore",
 		"groupby"
-	]
+	],
+	"terminal.integrated.splitCwd": "workspaceRoot"
 }
