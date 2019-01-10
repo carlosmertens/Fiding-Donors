@@ -19,7 +19,10 @@ Example call:
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import fbeta_score, accuracy_score, make_scorer
 
 
 def get_data(path):
@@ -181,3 +184,73 @@ def metric_evaluation(income):
 
 # Call function to preform metric evaluation with naive predictor
 accuracy, fscore = metric_evaluation(income)
+
+# Print message about the model selection
+message = "\n*** Model Selection ***\nData was tested on 3 models on the \
+Notebook finding_donors.ipynb\nModels: Decision Trees Classifier, Support \
+Vector Machines and AdaBoost\nChosen Model based on time training and metrics \
+evaluation: AdaBoost"
+
+print(message)
+
+
+def model_tuning(X_train, X_test, y_train, y_test):
+    """Use grid search to tune the AdaBoost model.
+
+    Function to initialize the model. To try different parameters in the model
+    and create F-beta score. To perform the GridSearch with the training data.
+    To make predictions and to print scores on the un-optimized model and the 
+    optimized model.
+    ----------
+    Parameters:
+        Xs (arrays): Training and testing data - Features set
+        ys (arrays):  Training and testing data - Labels set
+    Return:
+        best_clf: Optimized model 
+    """
+
+    # Initialize the classifier, fit and predict
+    clf = AdaBoostClassifier()
+    predictions = (clf.fit(X_train, y_train)).predict(X_test)
+
+    # Create dictionary with the parameters to tune
+    parameters = {'base_estimator': [DecisionTreeClassifier(max_depth=2),
+                                     DecisionTreeClassifier(max_depth=3),
+                                     DecisionTreeClassifier(max_depth=4),
+                                     DecisionTreeClassifier(max_depth=6),
+                                     DecisionTreeClassifier(max_depth=8)], 
+                  'n_estimators': range(100, 301, 50),
+                  'learning_rate': [1.1, 1, 0.1]}
+
+ 
+
+    # Create fbeta_score scoring object using make_scorer() and beta 0.5
+    scorer = make_scorer(fbeta_score(y_test, predictions, beta=0.5), beta=0.5)
+
+    # Perform grid search on the classifier
+    grid_obj = GridSearchCV(clf, parameters, scorer)
+
+    # Fit the grid search object to the training data
+    grid_fit = grid_obj.fit(X_train, y_train)
+
+    # Get the estimator
+    best_clf = grid_fit.best_estimator_
+
+    # Fit best model nd predict
+    best_clf.fit(X_train, y_train)
+    best_predictions = best_clf.predict(X_test)
+
+    # Report the before-and-afterscores
+    print("Un-optimized model\n------")
+    print("Accuracy score on testing data: {:.4f}".format(accuracy_score(y_test, predictions)))
+    print("F-score on testing data: {:.4f}".format(fbeta_score(y_test, predictions, beta = 0.5)))
+    print("\nOptimized Model\n------")
+    print("Final accuracy score on the testing data: {:.4f}".format(accuracy_score(y_test, best_predictions)))
+    print("Final F-score on the testing data: {:.4f}".format(fbeta_score(y_test, best_predictions, beta = 0.5)))
+
+    return best_clf
+
+
+model = model_tuning(X_train, X_test, y_train, y_test)
+# Print parameters the model
+print(model)
